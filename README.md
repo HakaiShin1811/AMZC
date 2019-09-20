@@ -1,1 +1,1 @@
-Amazon Checker created with Python
+Amazon Checker created with Python by Jin
