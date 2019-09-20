@@ -1,0 +1,1 @@
+Amazon Checker created with Python
