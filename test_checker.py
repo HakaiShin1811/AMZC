@@ -66,7 +66,7 @@ class checker(object):
 
     def checker_main(self, email, password):
         global loaded, good, bad, checked, errors
-        ctypes.windll.kernel32.SetConsoleTitleW(f"Amazon Checker by Jin")# - Checked: {checked} Bad: {bad} Good: {good} Error: {errors}")
+        ctypes.windll.kernel32.SetConsoleTitleW(f"Amazon Checker by Jin - Checked: {checked} Bad: {bad} Good: {good} Error: {errors}")
         while True:
             try:
                 #driver = webdriver.Chrome()
@@ -227,7 +227,7 @@ if __name__ == "__main__":
         _key = input("Key : ")
         if _key in keyCheck_final:
             combo_name = input("Combo Name: ")
-            print(Fore.LIGHTCYAN_EX + "I'm Processing...please wait")
+            print(Fore.LIGHTCYAN_EX + "I'm Processing...Please wait")
             checker(combo_name).threads()
             break
         else:
