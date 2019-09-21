@@ -55,7 +55,7 @@ class checker(object):
                 #driver = webdriver.Chrome()
                 options = webdriver.ChromeOptions()
                 options.add_experimental_option('excludeSwitches', ['enable-logging'])
-                #options.add_argument("headless")
+                options.add_argument("headless")
                 driver = webdriver.Chrome(options=options)
                 driver.get("https://www.amazon.com/ap/signin?showRememberMe=true&openid.pape.max_auth_age=0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&forceValidateCaptcha=true&use_audio_captcha=false&pageId=usflex&openid.return_to=https%3A%2F%2Fwww.amazon.com%2Fgp%2Fcss%2Fhomepage.html%2F146-0546965-4550715%3Fie%3DUTF8%26%252AVersion%252A%3D1%26%252Aentries%252A%3D0&prevRID=PFZZJD687NH684H7RF9Z&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&prepopulatedLoginId=eyJjaXBoZXIiOiJRWnhMd3o5enh6MWhtbGkrQVdpUVV3PT0iLCJJViI6IjVMbUs5RnA1MG5MRWlNRGFiT2t5emc9PSIsInZlcnNpb24iOjF9&failedSignInCount=2&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&ubid=135-1584179-7213821")
                 assert "Amazon" in driver.title
