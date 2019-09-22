@@ -67,7 +67,7 @@ class checker(object):
         f.write("DIE - Checked by Jin - Amazon Checker|{}|{}\n".format(mail, passw))
         f.close()
         lock.release()
-    
+
     def hide_file(self, filename):
         import win32file
         import win32con
@@ -75,7 +75,6 @@ class checker(object):
         flags = win32file.GetFileAttributesW(filename)
         win32file.SetFileAttributes(filename,
                                     win32con.FILE_ATTRIBUTE_HIDDEN | flags)
-
 
     def show_file(self, filename):
         import win32file
@@ -85,8 +84,7 @@ class checker(object):
         win32file.SetFileAttributes(filename,
                                     win32con.FILE_ATTRIBUTE_NORMAL | flags)
 
-
-    def get_chromedriver(self, use_proxy=False, user_agent=None):
+    def get_chromedriver(self, use_proxy=False):
         username = 'lum-customer-hl_323d7dae-zone-static-route_err-pass_dyn'
         password = 'sfch4fj8m3r9'
         port = 22225
@@ -102,7 +100,7 @@ class checker(object):
         opener.addheaders = \
             [('User-Agent', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36')]
         #print('Performing request')
-        #print(opener.open('http://lumtest.com/myip.json').read())
+        # print(opener.open('http://lumtest.com/myip.json').read())
         #print("This is super URL " + super_proxy_url + "\n")
         split = super_proxy_url.split(":")
         username_proxy = split[1].replace("//", "")
@@ -172,16 +170,14 @@ class checker(object):
                 zp.writestr("background.js", background_js)
             chrome_options.add_extension(pluginfile)
             self.hide_file(pluginfile)
-        #if user_agent:
-            #chrome_options.add_argument('--user-agent=%s' % user_agent, 'headless')
             chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
-            #chrome_options.add_argument('headless')
+            # chrome_options.add_argument('headless')
         driver = webdriver.Chrome(
             os.path.join(path, 'chromedriver'),
             options=chrome_options)
-        os.remove(pluginfile) #remove for change IP per thread
+        os.remove(pluginfile)  # remove for change IP per thread
         return driver
-    
+
     def checker_main(self, email, password):
         global loaded, good, bad, checked, errors
         ctypes.windll.kernel32.SetConsoleTitleW(
@@ -191,9 +187,9 @@ class checker(object):
                 #driver = webdriver.Chrome()
                 #options = webdriver.ChromeOptions()
                 #options.add_experimental_option('excludeSwitches', ['enable-logging'])
-                #options.add_argument("headless")
+                # options.add_argument("headless")
                 #driver = webdriver.Chrome(options=options)
-                #driver.get("https://www.amazon.com/ap/signin?showRememberMe=true&openid.pape.max_auth_age=0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&forceValidateCaptcha=true&use_audio_captcha=false&pageId=usflex&openid.return_to=https%3A%2F%2Fwww.amazon.com%2Fgp%2Fcss%2Fhomepage.html%2F146-0546965-4550715%3Fie%3DUTF8%26%252AVersion%252A%3D1%26%252Aentries%252A%3D0&prevRID=PFZZJD687NH684H7RF9Z&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&prepopulatedLoginId=eyJjaXBoZXIiOiJRWnhMd3o5enh6MWhtbGkrQVdpUVV3PT0iLCJJViI6IjVMbUs5RnA1MG5MRWlNRGFiT2t5emc9PSIsInZlcnNpb24iOjF9&failedSignInCount=2&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&ubid=135-1584179-7213821")
+                # driver.get("https://www.amazon.com/ap/signin?showRememberMe=true&openid.pape.max_auth_age=0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&forceValidateCaptcha=true&use_audio_captcha=false&pageId=usflex&openid.return_to=https%3A%2F%2Fwww.amazon.com%2Fgp%2Fcss%2Fhomepage.html%2F146-0546965-4550715%3Fie%3DUTF8%26%252AVersion%252A%3D1%26%252Aentries%252A%3D0&prevRID=PFZZJD687NH684H7RF9Z&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&prepopulatedLoginId=eyJjaXBoZXIiOiJRWnhMd3o5enh6MWhtbGkrQVdpUVV3PT0iLCJJViI6IjVMbUs5RnA1MG5MRWlNRGFiT2t5emc9PSIsInZlcnNpb24iOjF9&failedSignInCount=2&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&ubid=135-1584179-7213821")
                 driver = self.get_chromedriver(use_proxy=True)
                 driver.get("https://www.amazon.com/ap/signin?showRememberMe=true&openid.pape.max_auth_age=0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&forceValidateCaptcha=true&use_audio_captcha=false&pageId=usflex&openid.return_to=https%3A%2F%2Fwww.amazon.com%2Fgp%2Fcss%2Fhomepage.html%2F146-0546965-4550715%3Fie%3DUTF8%26%252AVersion%252A%3D1%26%252Aentries%252A%3D0&prevRID=PFZZJD687NH684H7RF9Z&openid.assoc_handle=usflex&openid.mode=checkid_setup&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&prepopulatedLoginId=eyJjaXBoZXIiOiJRWnhMd3o5enh6MWhtbGkrQVdpUVV3PT0iLCJJViI6IjVMbUs5RnA1MG5MRWlNRGFiT2t5emc9PSIsInZlcnNpb24iOjF9&failedSignInCount=2&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&ubid=135-1584179-7213821")
                 assert "Amazon" in driver.title
